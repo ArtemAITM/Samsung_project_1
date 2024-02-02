@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class secondActivity extends AppCompatActivity {
+    public static String ERROR = "Error";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +23,7 @@ public class secondActivity extends AppCompatActivity {
         public MyDraw(Context context) {
             super(context);
         }
+
         @Override
         protected void onDraw(@NonNull Canvas canvas) {
             super.onDraw(canvas);
@@ -30,8 +32,8 @@ public class secondActivity extends AppCompatActivity {
             mPaint.setAntiAlias(true);
             float xMax = 40F;
             float yMax = 40F;
-            @SuppressLint("CanvasSize") float width = canvas.getWidth();
-            @SuppressLint("CanvasSize") float height = canvas.getHeight();
+            @SuppressLint("CanvasSize") float width = getWidth();
+            @SuppressLint("CanvasSize") float height = getHeight();
             canvas.translate(width / 2, height / 2);
             canvas.scale(width / xMax, -height / yMax);
             mPaint.setStrokeWidth(.4f);
@@ -39,87 +41,74 @@ public class secondActivity extends AppCompatActivity {
             canvas.drawLine(0F, -20F, 0F, 20F, mPaint);
             mPaint.setColor(Color.RED);
 
-            for (int i = -20; i <= 20; ++i){
+            for (int i = -40; i <= 40; ++i) {
                 canvas.drawPoint(0, i, mPaint);
                 canvas.drawPoint(i, 0, mPaint);
             }
             String equation = getIntent().getStringExtra("equation");
             assert equation != null;
             equation = equation.replaceAll(" ", "");
-            if (equation.contains("^2")) {
-                System.out.println("YES");
-                draw_parabola(equation, canvas, mPaint);
+            find_type_function_and_draw(equation, canvas, mPaint);
+        }
+
+        protected void find_type_function_and_draw(String equation, Canvas canvas, Paint paint) {
+            if (equation.contains("sin")) {
+                drawSin(equation, canvas, paint);
             }
-            else if (equation.contains("x")) {
-                draw_line(equation, canvas, mPaint);
+            else if (equation.contains("cos")){
+                drawCos(equation, canvas, paint);
+            }
+            else if (! equation.contains("x")){
+                draw_lineY(equation, canvas, paint);
+           }
+            else if (equation.contains("x^2")){
+                draw_parabola(equation, canvas, paint);
+            }
+            else if(equation.contains("/x")){
+                draw_giperbola(equation, canvas, paint);
+            }
+            else if (equation.contains("x")){
+                draw_line(equation, canvas, paint);
             }
         }
 
-        private void draw_parabola(String equation, Canvas canvas, Paint mPaint) {
-            int aIndex = equation.indexOf("x^2");
-            int a = 1;
-            int b = 1;
-            int c = 0;
-            int left = 1;
-            if (equation.charAt(aIndex - 1) != '=')
-                a = Integer.parseInt(String.valueOf(equation.charAt(aIndex - 1)));
-            int bIndex = equation.indexOf("x", aIndex + 1);
-            if (equation.charAt(bIndex - 1) != '+' && equation.charAt(bIndex - 1) != '-')
-                b = Integer.parseInt(String.valueOf(equation.charAt(bIndex - 1)));
-            if (bIndex != equation.length() - 1)
-                c = Integer.parseInt(String.valueOf(equation.charAt(equation.length() - 1)));
-            if (equation.charAt(0) != 'y')
-                left = Integer.parseInt(String.valueOf(equation.charAt(0)));
-            System.out.println(a + " " + b + " " + c + " " + left);
-            float y;
-            if (equation.charAt(bIndex + 1) == '-') {
-                if (equation.charAt(equation.length() - 1) != 'x'
-                        && equation.charAt(equation.length() - 2) == '-'){
-                    for (float i = -20; i <= 20; i += 0.01) {
-                        y = (i * i * a - b * i - c) / left;
-                        canvas.drawPoint(i, y, mPaint);
-                    }
-                }
-                else{
-                    for (float i = -20; i <= 20; i += 0.01){
-                        y = (i * i * a - b * i + c) / left;
-                        canvas.drawPoint(i, y, mPaint);
-                    }
-                }
-            }
-            else if (equation.charAt(bIndex + 1) == '+') {
-                if (equation.charAt(equation.length() - 1) != 'x'
-                        && equation.charAt(equation.length() - 2) == '-'){
-                    for (float i = -20; i <= 20; i += 0.01) {
-                        y = (i * i * a + b * i - c) / left;
-                        canvas.drawPoint(i, y, mPaint);
-                    }
-                }
-                else{
-                    for (float i = -20; i <= 20; i += 0.01){
-                        y = (i * i * a + b * i + c) / left;
-                        canvas.drawPoint(i, y, mPaint);
-                    }
-                }
-            }
-        }
-    }
-    private void draw_line(String equation, Canvas canvas, Paint mPaint) {
-        int aIndex = equation.indexOf("x");
-        int left = 1;
-        int k = 1;
-        int b = 0;
-        if (equation.charAt(0) != 'y')
-            left = Integer.parseInt(String.valueOf(equation.charAt(0)));
-        if (equation.charAt(aIndex - 1) != '=')
-            k = Integer.parseInt(String.valueOf(equation.charAt(aIndex - 1)));
-        if (equation.charAt(equation.length() - 1) != 'x')
-            b = Integer.parseInt(String.valueOf(equation.charAt(equation.length() - 1)));
-        float y;
-        for (float i = -20; i <= 20; i += 0.01){
-            y = (k * i + b) / left;
-            canvas.drawPoint(i, y, mPaint);
-        }
     }
 
+    private void draw_line(String equation, Canvas canvas, Paint paint) {
+        //y=kx+-b
+        char[] func = equation.toCharArray();
+        int K = 1;
+        int B = 0;
+        B = func[-1];
+        if (func[equation.indexOf("x") + 1] == '-')
+            B = -B;
+        K = func[equation.indexOf("x") - 1];
+        if (func[equation.indexOf("x") - 2] == '-')
+            K = -K;
+        paint.setColor(Color.RED);
+        Path path = new Path();
+        path.moveTo(-40, K * -10 + B);
+        for(int i = -40; i <= 40; i+=0.1){
+            path.lineTo(i, i * K + B);
+        }
+        path.close();
+        canvas.drawPath(path, paint);
+    }
+
+    private void draw_giperbola(String equation, Canvas canvas, Paint paint) {
+
+    }
+
+    private void draw_parabola(String equation, Canvas canvas, Paint paint) {
+    }
+
+    private void draw_lineY(String equation, Canvas canvas, Paint paint) {
+    }
+
+    private void drawCos(String equation, Canvas canvas, Paint paint) {
+    }
+
+    private void drawSin(String equation, Canvas canvas, Paint paint) {
+
+    }
 }
