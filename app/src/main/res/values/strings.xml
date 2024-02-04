@@ -3,4 +3,5 @@
     <string name="x_n_x_y">Вводите уравнение полностью, квадрат записывайте x^n, модуль как /x/, все символы записывайте через пробелы в виде y = ....</string>
     <string name="draw">Нарисовать график</string>
     <string name="edit_draw">Введите уравнение функции</string>
+    <string name="desmosopm">DesmosOPM</string>
 </resources>

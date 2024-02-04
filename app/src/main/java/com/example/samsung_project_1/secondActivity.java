@@ -14,11 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class secondActivity extends AppCompatActivity {
     public static String ERROR = "Error";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(new MyDraw(this));
     }
+
     class MyDraw extends View {
         public MyDraw(Context context) {
             super(context);
@@ -46,69 +48,82 @@ public class secondActivity extends AppCompatActivity {
                 canvas.drawPoint(i, 0, mPaint);
             }
             String equation = getIntent().getStringExtra("equation");
-            assert equation != null;
-            equation = equation.replaceAll(" ", "");
-            find_type_function_and_draw(equation, canvas, mPaint);
+            mPaint.setAntiAlias(true);
+            mPaint.setStyle(Paint.Style.STROKE);
+            GraphicalFunctionAnalyzer.analyzeGraphicalFunction(equation, canvas, mPaint);
+            // find_type_function_and_draw(equation, canvas, mPaint);
         }
-
-        protected void find_type_function_and_draw(String equation, Canvas canvas, Paint paint) {
-            if (equation.contains("sin")) {
-                drawSin(equation, canvas, paint);
-            }
-            else if (equation.contains("cos")){
-                drawCos(equation, canvas, paint);
-            }
-            else if (! equation.contains("x")){
-                draw_lineY(equation, canvas, paint);
-           }
-            else if (equation.contains("x^2")){
-                draw_parabola(equation, canvas, paint);
-            }
-            else if(equation.contains("/x")){
-                draw_giperbola(equation, canvas, paint);
-            }
-            else if (equation.contains("x")){
-                draw_line(equation, canvas, paint);
-            }
-        }
-
-    }
-
-    private void draw_line(String equation, Canvas canvas, Paint paint) {
-        //y=kx+-b
-        char[] func = equation.toCharArray();
-        int K = 1;
-        int B = 0;
-        B = func[-1];
-        if (func[equation.indexOf("x") + 1] == '-')
-            B = -B;
-        K = func[equation.indexOf("x") - 1];
-        if (func[equation.indexOf("x") - 2] == '-')
-            K = -K;
-        paint.setColor(Color.RED);
-        Path path = new Path();
-        path.moveTo(-40, K * -10 + B);
-        for(int i = -40; i <= 40; i+=0.1){
-            path.lineTo(i, i * K + B);
-        }
-        path.close();
-        canvas.drawPath(path, paint);
-    }
-
-    private void draw_giperbola(String equation, Canvas canvas, Paint paint) {
-
-    }
-
-    private void draw_parabola(String equation, Canvas canvas, Paint paint) {
-    }
-
-    private void draw_lineY(String equation, Canvas canvas, Paint paint) {
-    }
-
-    private void drawCos(String equation, Canvas canvas, Paint paint) {
-    }
-
-    private void drawSin(String equation, Canvas canvas, Paint paint) {
-
     }
 }
+
+//        protected void find_type_function_and_draw(String equation, Canvas canvas, Paint paint) {
+//            if (equation.contains("sin")) {
+//                drawSin(equation, canvas, paint);
+//            }
+//            else if (equation.contains("cos")){
+//                drawCos(equation, canvas, paint);
+//            }
+//            else if (! equation.contains("x")){
+//                draw_lineY(equation, canvas, paint);
+//           }
+//            else if (equation.contains("x^2")){
+//                draw_parabola(equation, canvas, paint);
+//            }
+//            else if(equation.contains("/x")){
+//                draw_giperbola(equation, canvas, paint);
+//            }
+//            else if (equation.contains("x")){
+//                draw_line(equation, canvas, paint);
+//            }
+//        }
+//
+//    }
+//
+//    private void draw_line(String equation, Canvas canvas, Paint paint) {
+//        //y=kx+-b
+//        char[] func = equation.toCharArray();
+//        int K = 1;
+//        int B = 0;
+//        B = func[-1];
+//        if (func[equation.indexOf("x") + 1] == '-')
+//            B = -B;
+//        K = func[equation.indexOf("x") - 1];
+//        if (func[equation.indexOf("x") - 2] == '-')
+//            K = -K;
+//        paint.setColor(Color.RED);
+//        Path path = new Path();
+//        path.moveTo(-40, K * -10 + B);
+//        for(int i = -40; i <= 40; i+=0.1){
+//            path.lineTo(i, i * K + B);
+//        }
+//        path.close();
+//        canvas.drawPath(path, paint);
+//    }
+//
+//    private void draw_giperbola(String equation, Canvas canvas, Paint paint) {
+//        //y = ax^2 + bx + c or other variants
+//        equation = equation.substring(equation.indexOf("=") + 1);
+//        char[] func = equation.toCharArray();
+//        int A = 1;
+//        int B = 1;
+//        int C = 0;
+//        for (int i = 0; i < func.length - 1; i++) {
+//            if (func[i] == 'x' && func[i + 1] == '^' &&
+//                    func[i - 1] >= '0' && func[i - 1] <= '9'){
+//            }
+//        }
+//    }
+//
+//    private void draw_parabola(String equation, Canvas canvas, Paint paint) {
+//    }
+//
+//    private void draw_lineY(String equation, Canvas canvas, Paint paint) {
+//    }
+//
+//    private void drawCos(String equation, Canvas canvas, Paint paint) {
+//    }
+//
+//    private void drawSin(String equation, Canvas canvas, Paint paint) {
+//
+//    }
+
