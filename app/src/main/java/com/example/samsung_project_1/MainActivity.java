@@ -1,16 +1,18 @@
 package com.example.samsung_project_1;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.samsung_project_1.databinding.ActivityMainBinding;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -27,5 +29,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        binding.info.setOnClickListener(v -> {
+            сreateDialog(this);
+        });
+
+    }
+    public void сreateDialog(Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("DesmosOPM")
+                .setMessage("тут нет информации о приложение ааххахахаххахаххаххааххахаххахха")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
     }
 }
