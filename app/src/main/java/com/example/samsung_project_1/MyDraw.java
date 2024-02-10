@@ -57,7 +57,11 @@ class MyDraw extends View {
             canvas.drawPoint(i, 0, paint);
         }
         paint.setColor(Color.RED);
-        GraphicalFunctionAnalyzer.analyzeGraphicalFunction(function, canvas, paint);
+        try {
+            GraphicalFunctionAnalyzer.analyzeGraphicalFunction(function, canvas, paint);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    @Override
